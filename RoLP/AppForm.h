@@ -5,8 +5,19 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
 
-#include <alpr.h>
+//#include <alpr.h>
+//#include "alpr_processor.hpp"
 
+//#include <sstream>
+//#include <stdlib.h>
+//#include <stdexcept>
+//#include <windows.h>
+//#include <stdexcept>
+//#include "Shlwapi.h"
+//#include <algorithm>
+//#include <iterator>
+//#include <vector>
+//#include <fstream>
 
 #include <iostream>
 #include <string>
@@ -26,7 +37,7 @@ namespace RoLP {
 	using namespace MetroFramework::Forms;
 	using namespace cv;
 	using namespace std;
-	using namespace alpr;
+	//using namespace alpr;
 
 	/// <summary>
 	/// Summary for AppForm
@@ -482,7 +493,44 @@ namespace RoLP {
 			{
 				SrcViewPanel->ImageLocation = Open->FileName;
 				SrcViewPanel->Refresh();
-			
+				//alpr::Alpr openalpr("eu", "D:/openalpr_64/openalpr.conf");
+
+				//// Optionally specify the top N possible plates to return (with confidences).  Default is 10
+				//openalpr.setTopN(20);
+
+				//// Optionally, provide the library with a region for pattern matching.  This improves accuracy by 
+				//// comparing the plate text with the regional pattern.
+				//openalpr.setDefaultRegion("md");
+
+				//// Make sure the library loaded before continuing.  
+				//// For example, it could fail if the config/runtime_data is not found
+				//if (openalpr.isLoaded() == false)
+				//{
+				//	std::cerr << "Error loading OpenALPR" << std::endl;
+				//	return;
+				//}
+
+				//// Recognize an image file.  You could alternatively provide the image bytes in-memory.
+				//alpr::AlprResults results = openalpr.recognize("C:/tab.jpg");
+
+				//// Iterate through the results.  There may be multiple plates in an image, 
+				//// and each plate return sthe top N candidates.
+				//for (int i = 0; i < results.plates.size(); i++)
+				//{
+				//	alpr::AlprPlateResult plate = results.plates[i];
+				//	std::cout << "plate" << i << ": " << plate.topNPlates.size() << " results" << std::endl;
+
+				//	for (int k = 0; k < plate.topNPlates.size(); k++)
+				//	{
+				//		alpr::AlprPlate candidate = plate.topNPlates[k];
+				//		//std::cout << "    - " << candidate.characters << "\t confidence: " << candidate.overall_confidence;
+				//		//std::cout << "\t pattern_match: " << candidate.matches_template << std::endl;
+				//		ofstream myfile;
+				//		myfile.open("example.txt");
+				//		myfile << "    - " << candidate.characters << "\t confidence: " << candidate.overall_confidence << endl << "\t pattern_match: " << candidate.matches_template << std::endl;
+				//		myfile.close();
+				//	}
+				//}
 			}
 			else
 			{

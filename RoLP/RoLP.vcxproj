@@ -78,6 +78,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,14 +103,24 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64\include;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>true</EnablePREfast>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opencv_world400.lib;opencv_world400d.lib;liblept170.dll;openalpr.dll;openalpr-net.dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world400.lib;opencv_world400d.lib;alpr_processor.lib;kernel32.lib;user32.lib;shell32.lib;ole32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -137,9 +150,6 @@
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Data\Lib_dll\DLL_ModerUI\MetroFramework.Fonts.dll</HintPath>
     </Reference>
-    <Reference Include="openalpr-net">
-      <HintPath>..\Data\Lib_dll\openalpr_64\openalpr-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -150,9 +160,9 @@
     <ClCompile Include="AppForm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\openalpr_64\include\alpr.h" />
     <ClInclude Include="AppForm.h">
       <FileType>CppForm</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

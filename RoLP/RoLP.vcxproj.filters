@@ -23,9 +23,6 @@
     <ClInclude Include="AppForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\openalpr_64\include\alpr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AppForm.resx">

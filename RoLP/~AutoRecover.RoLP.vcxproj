@@ -78,6 +78,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,14 +103,20 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64\include;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\openalpr_64\include;D:\openalpr_64;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opencv_world400.lib;opencv_world400d.lib;liblept170.dll;openalpr.dll;openalpr-net.dll;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Tesseract-OCR\tessdata;"D:\openalpr_64";"D:\openalpr_64\runtime_data";D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>liblept170.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -138,7 +147,7 @@
       <HintPath>..\Data\Lib_dll\DLL_ModerUI\MetroFramework.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="openalpr-net">
-      <HintPath>..\Data\Lib_dll\openalpr_64\openalpr-net.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\openalpr_64\openalpr-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -148,12 +157,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppForm.cpp" />
-    <ClCompile Include="FrameProcessing.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\openalpr_64\include\alpr.h" />
+    <ClInclude Include="..\..\..\..\..\..\openalpr_64\include\alpr.h" />
     <ClInclude Include="AppForm.h">
       <FileType>CppForm</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
