@@ -100,13 +100,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64\include;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opencv_world400.lib;opencv_world400d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world400.lib;opencv_world400d.lib;liblept170.dll;openalpr.dll;openalpr-net.dll;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Studia\IV rok\Praca_inz\Projekt\RoLP\Data\Lib_dll\openalpr_64;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV rok\Praca inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,6 +137,9 @@
     <Reference Include="MetroFramework.Fonts">
       <HintPath>..\Data\Lib_dll\DLL_ModerUI\MetroFramework.Fonts.dll</HintPath>
     </Reference>
+    <Reference Include="openalpr-net">
+      <HintPath>..\Data\Lib_dll\openalpr_64\openalpr-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -145,8 +148,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppForm.cpp" />
+    <ClCompile Include="FrameProcessing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\openalpr_64\include\alpr.h" />
     <ClInclude Include="AppForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
