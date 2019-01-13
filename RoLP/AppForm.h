@@ -1,23 +1,13 @@
 #pragma once
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/video.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 
-//#include <alpr.h>
-//#include "alpr_processor.hpp"
-
-//#include <sstream>
-//#include <stdlib.h>
-//#include <stdexcept>
-//#include <windows.h>
-//#include <stdexcept>
-//#include "Shlwapi.h"
-//#include <algorithm>
-//#include <iterator>
-//#include <vector>
-//#include <fstream>
+#include <msclr\marshal_cppstd.h>
 
 #include <iostream>
 #include <string>
@@ -37,7 +27,10 @@ namespace RoLP {
 	using namespace MetroFramework::Forms;
 	using namespace cv;
 	using namespace std;
-	//using namespace alpr;
+	//using namespace tesseract;
+
+	VideoCapture* CAP = NULL;
+	Mat src;
 
 	/// <summary>
 	/// Summary for AppForm
@@ -66,19 +59,14 @@ namespace RoLP {
 		}
 	private: MetroFramework::Controls::MetroPanel^  LeftMenu;
 	private: MetroFramework::Controls::MetroButton^  Recognition_Button;
-
 	private: MetroFramework::Controls::MetroPanel^  Recognition_Panel;
 	private: MetroFramework::Controls::MetroRadioButton^  CameraRadioButton;
-
 	private: MetroFramework::Controls::MetroRadioButton^  VideoRadioButton;
 	private: MetroFramework::Controls::MetroRadioButton^  ImageRadioButton;
 	private: MetroFramework::Controls::MetroPanel^  ControlBarPanel;
 	private: MetroFramework::Controls::MetroLabel^  ControlBarText;
 	private: MetroFramework::Controls::MetroButton^  Contact_Button;
-
 	private: MetroFramework::Controls::MetroButton^  About_Button;
-
-
 	private: MetroFramework::Controls::MetroPanel^  ResultPanel;
 	private: MetroFramework::Controls::MetroLabel^  ResultText;
 	private: MetroFramework::Controls::MetroPanel^  PlateViewResultPanel;
@@ -87,13 +75,10 @@ namespace RoLP {
 	private: MetroFramework::Controls::MetroPanel^  DetectedCharResultPanel;
 	private: MetroFramework::Controls::MetroLabel^  DetectedCharResultText;
 	private: MetroFramework::Controls::MetroLabel^  CharResultText;
-
 	private: MetroFramework::Controls::MetroButton^  LoadSourceButton;
 	private: System::Windows::Forms::PictureBox^  SrcViewPanel;
 	private: MetroFramework::Controls::MetroButton^  ProcessingButton;
-
-
-
+	private: System::Windows::Forms::Timer^  timer1;
 	private: System::ComponentModel::IContainer^  components;
 
 
@@ -110,6 +95,7 @@ namespace RoLP {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->LeftMenu = (gcnew MetroFramework::Controls::MetroPanel());
 			this->Contact_Button = (gcnew MetroFramework::Controls::MetroButton());
 			this->About_Button = (gcnew MetroFramework::Controls::MetroButton());
@@ -131,6 +117,7 @@ namespace RoLP {
 			this->DetectedCharResultPanel = (gcnew MetroFramework::Controls::MetroPanel());
 			this->PlateViewResultPanel = (gcnew MetroFramework::Controls::MetroPanel());
 			this->ResultText = (gcnew MetroFramework::Controls::MetroLabel());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->LeftMenu->SuspendLayout();
 			this->Recognition_Panel->SuspendLayout();
 			this->ControlBarPanel->SuspendLayout();
@@ -267,6 +254,7 @@ namespace RoLP {
 			this->ProcessingButton->TabIndex = 8;
 			this->ProcessingButton->Text = L"Processing";
 			this->ProcessingButton->UseSelectable = true;
+			this->ProcessingButton->Click += gcnew System::EventHandler(this, &AppForm::ProcessingButton_Click);
 			// 
 			// LoadSourceButton
 			// 
@@ -447,6 +435,11 @@ namespace RoLP {
 			this->ResultText->Text = L"Result";
 			this->ResultText->UseStyleColors = true;
 			// 
+			// timer1
+			// 
+			this->timer1->Interval = 10;
+			this->timer1->Tick += gcnew System::EventHandler(this, &AppForm::timer1_Tick);
+			// 
 			// AppForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 20);
@@ -493,44 +486,8 @@ namespace RoLP {
 			{
 				SrcViewPanel->ImageLocation = Open->FileName;
 				SrcViewPanel->Refresh();
-				//alpr::Alpr openalpr("eu", "D:/openalpr_64/openalpr.conf");
+				//tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
 
-				//// Optionally specify the top N possible plates to return (with confidences).  Default is 10
-				//openalpr.setTopN(20);
-
-				//// Optionally, provide the library with a region for pattern matching.  This improves accuracy by 
-				//// comparing the plate text with the regional pattern.
-				//openalpr.setDefaultRegion("md");
-
-				//// Make sure the library loaded before continuing.  
-				//// For example, it could fail if the config/runtime_data is not found
-				//if (openalpr.isLoaded() == false)
-				//{
-				//	std::cerr << "Error loading OpenALPR" << std::endl;
-				//	return;
-				//}
-
-				//// Recognize an image file.  You could alternatively provide the image bytes in-memory.
-				//alpr::AlprResults results = openalpr.recognize("C:/tab.jpg");
-
-				//// Iterate through the results.  There may be multiple plates in an image, 
-				//// and each plate return sthe top N candidates.
-				//for (int i = 0; i < results.plates.size(); i++)
-				//{
-				//	alpr::AlprPlateResult plate = results.plates[i];
-				//	std::cout << "plate" << i << ": " << plate.topNPlates.size() << " results" << std::endl;
-
-				//	for (int k = 0; k < plate.topNPlates.size(); k++)
-				//	{
-				//		alpr::AlprPlate candidate = plate.topNPlates[k];
-				//		//std::cout << "    - " << candidate.characters << "\t confidence: " << candidate.overall_confidence;
-				//		//std::cout << "\t pattern_match: " << candidate.matches_template << std::endl;
-				//		ofstream myfile;
-				//		myfile.open("example.txt");
-				//		myfile << "    - " << candidate.characters << "\t confidence: " << candidate.overall_confidence << endl << "\t pattern_match: " << candidate.matches_template << std::endl;
-				//		myfile.close();
-				//	}
-				//}
 			}
 			else
 			{
@@ -539,7 +496,7 @@ namespace RoLP {
 
 		}
 
-		if (VideoRadioButton->Checked == true) 
+		if (VideoRadioButton->Checked == true)
 		{
 
 			//VideoCapture cap("c://123.mp4");
@@ -576,25 +533,58 @@ namespace RoLP {
 
 				//return ;
 
-				OpenFileDialog^ Open = gcnew OpenFileDialog();
-				Open->ShowHelp = true;
-				Open->RestoreDirectory = true;
-				Open->Filter = "Video (*.avi;*.mp4;*.wmv;*.mpg)|*.avi;*.mp4;*.wmv;*.mpg|All files (*.*)|*.*||";
+			OpenFileDialog^ Open = gcnew OpenFileDialog();
+			Open->ShowHelp = true;
+			Open->RestoreDirectory = true;
+			Open->Filter = "Video (*.avi;*.mp4;*.wmv;*.mpg)|*.avi;*.mp4;*.wmv;*.mpg|All files (*.*)|*.*||";
 
-				if (Open->ShowDialog() == System::Windows::Forms::DialogResult::OK)
-				{
-					while (1){
-					Bitmap^ bmpSrc = gcnew Bitmap(Open->FileName);
-					SrcViewPanel->Image = bmpSrc;
-					SrcViewPanel->Refresh();
-				}
-				}
-				else
-				{
-					return;
-				}
+			Threading::Thread::CurrentThread->ApartmentState = Threading::ApartmentState::STA;
+			if (Open->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			{
+				std::string S = msclr::interop::marshal_as<std::string>(Open->FileName);
+				//static VideoCapture cap(S);
+				//CAP = &cap;
+				if (CAP) { delete CAP; CAP = NULL;}
+				CAP = new VideoCapture(S);
+				timer1->Enabled = true;
+				//VideoCapture cap("G:\\123.mp4");
 
+				// Check if camera opened successfully
+
+				//Mat frame;
+				//VideoCapture cap("123.mp4", 200);
+				////cap.open();
+
+				//if (!cap.isOpened())
+				//{
+				//	std::cout << "change the camera port number";
+				//}
+
+				//while (cap.read(frame) & exitValue == false) {
+
+				//	if (frame.empty()) return; // end of video stream
+
+				//	System::IntPtr ptr2(frame.ptr());
+
+				//	SrcViewPanel->Width = 1.5 * frame.cols;
+				//	SrcViewPanel->Height = 1.4 * frame.rows;
+				//	SrcViewPanel->Image = gcnew System::Drawing::Bitmap(frame.cols, frame.rows, frame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, ptr2);
+				//	SrcViewPanel->Refresh();
+
+				//	if (waitKey(1000 / fps) >= 0) {
+				//		frame.release();
+				//		cap.release();
+				//		break;
+				//	}
+
+				//}
+			}
+			//else
+			//{
+			//	return;
 			//}
+
+		//}
 
 		}
 
@@ -642,5 +632,30 @@ namespace RoLP {
 			e->Cancel = true;
 		}
 	}
-	};
+	private: System::Void ProcessingButton_Click(System::Object^  sender, System::EventArgs^  e) {
+
+	}
+	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+		Mat frame;
+		// Capture frame-by-frame
+		*CAP >> frame;
+		//CAP >> frame;
+
+		// If the frame is empty, break immediately
+		if (frame.empty()) {
+			timer1->Enabled = false;
+			delete CAP;
+			CAP = NULL;
+			return;
+		}
+
+		System::IntPtr ptr2(frame.ptr());
+
+		SrcViewPanel->Width = 1.5 * frame.cols;
+		SrcViewPanel->Height = 1.4 * frame.rows;
+		SrcViewPanel->Image = gcnew System::Drawing::Bitmap(frame.cols, frame.rows, frame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, ptr2);
+		SrcViewPanel->Refresh();
+
+	}
+};
 }
