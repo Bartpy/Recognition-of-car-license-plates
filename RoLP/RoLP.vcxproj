@@ -102,17 +102,19 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Studia\IV_rok\Praca_inżynierska\Dll_openCV\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Studia\IV_rok\Praca_inz\Projekt\RoLP\Tesseract\include;D:\Studia\IV_rok\Praca_inz\Projekt\RoLP\OpenCV\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <SDLCheck>
+      </SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opencv_world400d.lib;opencv_world400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world400d.lib;liblept.lib;libtesseract.lib;giflib.lib;libjpeg.lib;libpng.lib;libtiff.lib;libwebp.lib;openjpeg.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>D:\Studia\IV_rok\Praca_inżynierska\Dll_openCV\opencv\build\x64\vc15\lib;D:\Studia\IV_rok\Praca_inżynierska\Dll_openCV\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Studia\IV_rok\Praca_inz\Projekt\RoLP\Tesseract\debug;D:\Studia\IV_rok\Praca_inz\Projekt\RoLP\OpenCV;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>
@@ -121,6 +123,7 @@
       </ImportLibrary>
       <PreventDllBinding>
       </PreventDllBinding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -173,15 +176,6 @@
     <EmbeddedResource Include="AppForm.resx">
       <DependentUpon>AppForm.h</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="123.mp4">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
