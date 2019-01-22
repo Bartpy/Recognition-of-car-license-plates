@@ -27,6 +27,9 @@ int ratio2 = 3;
 int kernel_size = 3;
 /*--------------------------------------------------------*/
 
+cv::CascadeClassifier Classifier;
+tesseract::TessBaseAPI TesseractAPI;
+
 namespace RoLP {
 
 	using namespace System;
@@ -45,6 +48,8 @@ namespace RoLP {
 	Mat dst;
 	Mat detected_edges;
 	Mat img_to_det;
+	cv::Size size(900, 600);
+	cv::Size small_size(150, 40);
 
 	/// <summary>
 	/// Summary for AppForm
@@ -71,7 +76,6 @@ namespace RoLP {
 				delete components;
 			}
 		}
-
 
 	private: MetroFramework::Controls::MetroPanel^  LeftMenu;
 	private: MetroFramework::Controls::MetroButton^  Recognition_Button;
@@ -101,8 +105,6 @@ namespace RoLP {
 	private: MetroFramework::Controls::MetroPanel^  Contact_Panel;
 	private: MetroFramework::Controls::MetroLabel^  Num_phone_label;
 	private: System::ComponentModel::IContainer^  components;
-
-
 
 	private:
 		/// <summary>
@@ -614,8 +616,16 @@ namespace RoLP {
 
 			if (Open->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 			{
+				string init_file_path = msclr::interop::marshal_as<std::string>(Open->FileName);
+				Mat read_src = cv::imread(init_file_path, 1);
+				Mat init_src;
+				resize(read_src, init_src, size);
 				StatusMainLabel->Text = "The source has been successfully loaded";
-				SrcViewPanel->ImageLocation = Open->FileName;
+				System::IntPtr init_main_frame(init_src.ptr());
+				//SrcViewPanel->Width = (int)(init_src.cols);
+				//SrcViewPanel->Height = (int)(init_src.rows);
+				SrcViewPanel->ResetImeMode();
+				SrcViewPanel->Image = gcnew System::Drawing::Bitmap(init_src.cols, init_src.rows, init_src.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, init_main_frame);
 				SrcViewPanel->Refresh();
 			}
 			else
@@ -634,12 +644,11 @@ namespace RoLP {
 
 			cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 			equalizeHist(gray, img_to_det);
-			CannyThreshold(0, gray);
+			CannyThreshold(0, img_to_det);
 			//cv::imshow("Equalize Histogram",img_to_det);
-			cv::CascadeClassifier cascadeSymbol;
-			bool cascadeSymbolLoad = cascadeSymbol.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml");
 
-			tesseract::TessBaseAPI TesseractAPI;
+			bool cascadeSymbolLoad = Classifier.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml");
+
 			if (TesseractAPI.Init(NULL, "eng", tesseract::OEM_DEFAULT) < 0) return;
 			TesseractAPI.SetPageSegMode(tesseract::PSM_AUTO_OSD);
 			TesseractAPI.SetOutputName("out");
@@ -654,7 +663,7 @@ namespace RoLP {
 			}
 
 			std::vector<cv::Rect> symbols;
-			cascadeSymbol.detectMultiScale(img_to_det, symbols, 1.1, 2, 0); // Wyszukiwanie kaskadowe
+			Classifier.detectMultiScale(img_to_det, symbols, 1.1, 2, 0); // Wyszukiwanie kaskadowe
 
 			for (auto& p : symbols)
 			{
@@ -673,26 +682,34 @@ namespace RoLP {
 			}
 
 			//cv::imshow("Test", src);
-			if (src.rows != 0) {
-				System::IntPtr main_frame(src.ptr());
-				SrcViewPanel->Width = (int)(src.cols);
-				SrcViewPanel->Height = (int)(src.rows);
-				SrcViewPanel->Image = gcnew System::Drawing::Bitmap(src.cols, src.rows, src.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, main_frame);
-				SrcViewPanel->Refresh();
+
+			if (src.cols > PlateViewResultBox->Width && src.rows > PlateViewResultBox->Height)
+			{
+				Mat pic_src_tmp = src;
+				resize(pic_src_tmp, src, size);
 			}
-			if (src.cols != 0) {
-				System::IntPtr plate_frame(img2.ptr());
-				PlateViewResultBox->Width = (int)(img2.cols);
-				PlateViewResultBox->Height = (int)(img2.rows);
-				PlateViewResultBox->BackgroundImage = gcnew System::Drawing::Bitmap(img2.cols, img2.rows, img2.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, plate_frame);
-				PlateViewResultBox->Refresh();
+			System::IntPtr main_frame(src.ptr());
+			SrcViewPanel->ResetImeMode();
+			SrcViewPanel->Image = gcnew System::Drawing::Bitmap(src.cols, src.rows, src.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, main_frame);
+			SrcViewPanel->Refresh();
+
+			if (img2.cols > PlateViewResultBox->Width && img2.rows > PlateViewResultBox->Height)
+			{
+				Mat src_tmp = img2;
+				resize(src_tmp, img2, size);
 			}
+			System::IntPtr plate_frame(img2.ptr());
+			PlateViewResultBox->ResetImeMode();
+			//PlateViewResultBox->Image = gcnew System::Drawing::Bitmap(img2.cols, img2.rows, img2.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, plate_frame);
+			//PlateViewResultBox->Refresh();
+			imshow("Plate", img2);
+
 
 			Mat img_to_tess;
 
-			cvtColor(img2, gray, cv::COLOR_BGR2GRAY); // zmiana na czarno bia³y obraz
-			equalizeHist(gray, img_to_tess);
-			cv::Mat SubFrame = img_to_tess;
+			//cvtColor(img2, gray, cv::COLOR_BGR2GRAY); // zmiana na czarno bia³y obraz
+			//equalizeHist(gray, img_to_tess);
+			cv::Mat SubFrame = img2;
 
 			char* Text_ret = NULL;
 			int i = 0;
@@ -729,14 +746,28 @@ namespace RoLP {
 				return;
 			}
 
+			if (Classifier.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml"))
+				StatusMainLabel->Text = "Classifier has been successfully loaded";
+			else
+			{
+				StatusMainLabel->Text = "Classifier has not been successfully loaded";
+				return;
+			}
+
+
+			if (TesseractAPI.Init(NULL, "eng", tesseract::OEM_DEFAULT) >= 0)
+				StatusMainLabel->Text = "Tesseract has been successfully loaded";
+			else {
+				StatusMainLabel->Text = "Tesseract has been successfully loaded";
+				return;
+			}
+			TesseractAPI.SetPageSegMode(tesseract::PSM_AUTO_OSD);
+			TesseractAPI.SetOutputName("out");
+
 		}
 
 		if (CameraRadioButton->Checked == true) {
-			if (CAP)
-			{
-				delete CAP;
-				CAP = NULL;
-			}
+			if (CAP) { delete CAP; CAP = NULL; }
 			CAP = new VideoCapture(0);
 			if (CAP) StatusMainLabel->Text = "The source has been successfully loaded";
 			else
@@ -744,6 +775,24 @@ namespace RoLP {
 				StatusMainLabel->Text = "The source has not been successfully loaded";
 				return;
 			}
+
+			if (Classifier.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml"))
+				StatusMainLabel->Text = "Classifier has been successfully loaded";
+			else
+			{
+				StatusMainLabel->Text = "Classifier has not been successfully loaded";
+				return;
+			}
+
+
+			if (TesseractAPI.Init(NULL, "eng", tesseract::OEM_DEFAULT) >= 0)
+				StatusMainLabel->Text = "Tesseract has been successfully loaded";
+			else {
+				StatusMainLabel->Text = "Tesseract has been successfully loaded";
+				return;
+			}
+			TesseractAPI.SetPageSegMode(tesseract::PSM_AUTO_OSD);
+			TesseractAPI.SetOutputName("out");
 		}
 	}
 
@@ -766,40 +815,32 @@ namespace RoLP {
 		}
 	}
 	private: System::Void ProcessingButton_Click(System::Object^  sender, System::EventArgs^  e) {
-		SrcViewPanel->Refresh();
-		timer1->Enabled = true;
+		timer1->Enabled = !timer1->Enabled;
 	}
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 		Mat Frame;
 		// Capture frame-by-frame
 		*CAP >> Frame;
 
-		cv::CascadeClassifier Classifier;
-		if (!Classifier.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml")) return;
-
-		tesseract::TessBaseAPI TesseractAPI;
-		if (TesseractAPI.Init(NULL, "eng", tesseract::OEM_DEFAULT) < 0) return;
-		TesseractAPI.SetPageSegMode(tesseract::PSM_AUTO_OSD);
-		TesseractAPI.SetOutputName("out");
 		// If the frame is empty, break immediately
-		if (Frame.empty()) {
-			timer1->Enabled = false;
-			delete CAP;
-			CAP = NULL;
-			return;
-		}
+		if (Frame.empty()) { return; }
 
 		//cv::imshow("Frame", Frame);
 		if (Frame.cols <= SrcViewPanel->Width && Frame.rows <= SrcViewPanel->Height) {
 			System::IntPtr camera_vid(Frame.ptr());
-			SrcViewPanel->Width = (int)(Frame.cols);
-			SrcViewPanel->Height = (int)(Frame.rows);
+			SrcViewPanel->ResetImeMode();
 			SrcViewPanel->Image = gcnew System::Drawing::Bitmap(Frame.cols, Frame.rows, Frame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, camera_vid);
 			SrcViewPanel->Refresh();
 		}
-		else if (Frame.cols > SrcViewPanel->Width || Frame.rows > SrcViewPanel->Height)
+		else
 		{
-			imshow("Video stream", Frame);
+			Mat src = Frame;
+			resize(src, Frame, size);
+			System::IntPtr camera_vid(Frame.ptr());
+			SrcViewPanel->ResetImeMode();
+			SrcViewPanel->Image = gcnew System::Drawing::Bitmap(Frame.cols, Frame.rows, Frame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, camera_vid);
+			SrcViewPanel->Refresh();
+			//		imshow("Video stream", Frame);
 		}
 
 		std::vector<cv::Rect> Regions;
@@ -808,20 +849,24 @@ namespace RoLP {
 		//CannyThreshold(0, gray);
 		//equalizeHist(gray, img_to_det);
 
-		Frame = img_to_det;
-		Classifier.detectMultiScale(Frame, Regions, 1.1, 2, 0, cv::Size(50, 50));
+		//Frame = img_to_det;
+		Classifier.detectMultiScale(Frame, Regions, 1.1, 2, 0);
 
 		for (int i = 0; i < Regions.size(); ++i) {
 			cv::Mat SubFrame = Frame(Regions[i]);
-			cv::Mat img_to_tess;
+			//cv::Mat img_to_tess;
 			//cv::imshow("SubFrame", SubFrame);
 			TesseractAPI.SetImage(SubFrame.data, SubFrame.cols, SubFrame.rows, 3, SubFrame.step);
 			if (!TesseractAPI.Recognize(0)) {
 				const char* Text_result = _strdup(TesseractAPI.GetUTF8Text());
 				//cv::imshow(Text_result, SubFrame);
+				if (SubFrame.cols > PlateViewResultBox->Width && SubFrame.rows > PlateViewResultBox->Height)
+				{
+					Mat src_tmp = SubFrame;
+					resize(src_tmp, SubFrame, size);
+				}
 				System::IntPtr plate_frame(SubFrame.ptr());
-				PlateViewResultBox->Width = (int)(SubFrame.cols);
-				PlateViewResultBox->Height = (int)(SubFrame.rows);
+				PlateViewResultBox->ResetImeMode();
 				PlateViewResultBox->BackgroundImage = gcnew System::Drawing::Bitmap
 				(SubFrame.cols, SubFrame.rows, SubFrame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, plate_frame);
 				PlateViewResultBox->Refresh();
