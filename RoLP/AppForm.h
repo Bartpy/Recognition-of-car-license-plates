@@ -45,7 +45,6 @@ namespace RoLP {
 	Mat dst;
 	Mat detected_edges;
 	Mat img_to_det;
-	string file_path;
 
 	/// <summary>
 	/// Summary for AppForm
@@ -72,6 +71,8 @@ namespace RoLP {
 				delete components;
 			}
 		}
+
+
 	private: MetroFramework::Controls::MetroPanel^  LeftMenu;
 	private: MetroFramework::Controls::MetroButton^  Recognition_Button;
 	private: MetroFramework::Controls::MetroPanel^  Recognition_Panel;
@@ -92,11 +93,16 @@ namespace RoLP {
 	private: System::Windows::Forms::Timer^  timer1;
 	private: System::Windows::Forms::PictureBox^  PlateViewResultBox;
 	private: System::Windows::Forms::Label^  CharResultLabel;
-	private: System::Windows::Forms::Label^  Status_label;
 	private: MetroFramework::Controls::MetroButton^  StopProcessingButton;
 	private: System::Windows::Forms::Label^  StatusMainLabel;
-	private: MetroFramework::Controls::MetroLabel^  metroLabel1;
+	private: MetroFramework::Controls::MetroPanel^  About_Panel;
+	private: MetroFramework::Controls::MetroLabel^  Name_ect_Label;
+	private: MetroFramework::Controls::MetroLabel^  Desc_label;
+	private: MetroFramework::Controls::MetroPanel^  Contact_Panel;
+	private: MetroFramework::Controls::MetroLabel^  Num_phone_label;
 	private: System::ComponentModel::IContainer^  components;
+
+
 
 	private:
 		/// <summary>
@@ -112,11 +118,15 @@ namespace RoLP {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(AppForm::typeid));
 			this->LeftMenu = (gcnew MetroFramework::Controls::MetroPanel());
 			this->Contact_Button = (gcnew MetroFramework::Controls::MetroButton());
 			this->About_Button = (gcnew MetroFramework::Controls::MetroButton());
 			this->Recognition_Button = (gcnew MetroFramework::Controls::MetroButton());
 			this->Recognition_Panel = (gcnew MetroFramework::Controls::MetroPanel());
+			this->About_Panel = (gcnew MetroFramework::Controls::MetroPanel());
+			this->Desc_label = (gcnew MetroFramework::Controls::MetroLabel());
+			this->Name_ect_Label = (gcnew MetroFramework::Controls::MetroLabel());
 			this->StatusMainLabel = (gcnew System::Windows::Forms::Label());
 			this->ControlBarPanel = (gcnew MetroFramework::Controls::MetroPanel());
 			this->StopProcessingButton = (gcnew MetroFramework::Controls::MetroButton());
@@ -128,20 +138,22 @@ namespace RoLP {
 			this->ControlBarText = (gcnew MetroFramework::Controls::MetroLabel());
 			this->SrcViewPanel = (gcnew System::Windows::Forms::PictureBox());
 			this->ResultPanel = (gcnew MetroFramework::Controls::MetroPanel());
-			this->Status_label = (gcnew System::Windows::Forms::Label());
 			this->CharResultLabel = (gcnew System::Windows::Forms::Label());
 			this->PlateViewResultBox = (gcnew System::Windows::Forms::PictureBox());
 			this->CharResultText = (gcnew MetroFramework::Controls::MetroLabel());
 			this->PlateResultText = (gcnew MetroFramework::Controls::MetroLabel());
 			this->ResultText = (gcnew MetroFramework::Controls::MetroLabel());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
-			this->metroLabel1 = (gcnew MetroFramework::Controls::MetroLabel());
+			this->Contact_Panel = (gcnew MetroFramework::Controls::MetroPanel());
+			this->Num_phone_label = (gcnew MetroFramework::Controls::MetroLabel());
 			this->LeftMenu->SuspendLayout();
 			this->Recognition_Panel->SuspendLayout();
+			this->About_Panel->SuspendLayout();
 			this->ControlBarPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SrcViewPanel))->BeginInit();
 			this->ResultPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->PlateViewResultBox))->BeginInit();
+			this->Contact_Panel->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// LeftMenu
@@ -185,6 +197,7 @@ namespace RoLP {
 			this->Contact_Button->UseCustomBackColor = true;
 			this->Contact_Button->UseCustomForeColor = true;
 			this->Contact_Button->UseSelectable = true;
+			this->Contact_Button->Click += gcnew System::EventHandler(this, &AppForm::Contact_Button_Click);
 			// 
 			// About_Button
 			// 
@@ -204,6 +217,7 @@ namespace RoLP {
 			this->About_Button->UseCustomBackColor = true;
 			this->About_Button->UseCustomForeColor = true;
 			this->About_Button->UseSelectable = true;
+			this->About_Button->Click += gcnew System::EventHandler(this, &AppForm::About_Button_Click);
 			// 
 			// Recognition_Button
 			// 
@@ -223,6 +237,7 @@ namespace RoLP {
 			this->Recognition_Button->UseCustomBackColor = true;
 			this->Recognition_Button->UseCustomForeColor = true;
 			this->Recognition_Button->UseSelectable = true;
+			this->Recognition_Button->Click += gcnew System::EventHandler(this, &AppForm::Recognition_Button_Click);
 			// 
 			// Recognition_Panel
 			// 
@@ -242,6 +257,51 @@ namespace RoLP {
 			this->Recognition_Panel->VerticalScrollbarBarColor = true;
 			this->Recognition_Panel->VerticalScrollbarHighlightOnWheel = false;
 			this->Recognition_Panel->VerticalScrollbarSize = 10;
+			// 
+			// About_Panel
+			// 
+			this->About_Panel->Controls->Add(this->Desc_label);
+			this->About_Panel->Controls->Add(this->Name_ect_Label);
+			this->About_Panel->HorizontalScrollbarBarColor = true;
+			this->About_Panel->HorizontalScrollbarHighlightOnWheel = false;
+			this->About_Panel->HorizontalScrollbarSize = 10;
+			this->About_Panel->Location = System::Drawing::Point(226, 52);
+			this->About_Panel->Name = L"About_Panel";
+			this->About_Panel->Size = System::Drawing::Size(1309, 695);
+			this->About_Panel->TabIndex = 2;
+			this->About_Panel->VerticalScrollbarBarColor = true;
+			this->About_Panel->VerticalScrollbarHighlightOnWheel = false;
+			this->About_Panel->VerticalScrollbarSize = 10;
+			// 
+			// Desc_label
+			// 
+			this->Desc_label->AutoSize = true;
+			this->Desc_label->BackColor = System::Drawing::Color::Silver;
+			this->Desc_label->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->Desc_label->FontSize = MetroFramework::MetroLabelSize::Tall;
+			this->Desc_label->FontWeight = MetroFramework::MetroLabelWeight::Regular;
+			this->Desc_label->Location = System::Drawing::Point(691, 484);
+			this->Desc_label->Name = L"Desc_label";
+			this->Desc_label->Size = System::Drawing::Size(555, 150);
+			this->Desc_label->TabIndex = 3;
+			this->Desc_label->Text = resources->GetString(L"Desc_label.Text");
+			this->Desc_label->UseCustomBackColor = true;
+			this->Desc_label->UseCustomForeColor = true;
+			// 
+			// Name_ect_Label
+			// 
+			this->Name_ect_Label->AutoSize = true;
+			this->Name_ect_Label->BackColor = System::Drawing::Color::Silver;
+			this->Name_ect_Label->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->Name_ect_Label->FontSize = MetroFramework::MetroLabelSize::Tall;
+			this->Name_ect_Label->FontWeight = MetroFramework::MetroLabelWeight::Regular;
+			this->Name_ect_Label->Location = System::Drawing::Point(60, 59);
+			this->Name_ect_Label->Name = L"Name_ect_Label";
+			this->Name_ect_Label->Size = System::Drawing::Size(630, 175);
+			this->Name_ect_Label->TabIndex = 2;
+			this->Name_ect_Label->Text = resources->GetString(L"Name_ect_Label.Text");
+			this->Name_ect_Label->UseCustomBackColor = true;
+			this->Name_ect_Label->UseCustomForeColor = true;
 			// 
 			// StatusMainLabel
 			// 
@@ -264,11 +324,11 @@ namespace RoLP {
 			this->ControlBarPanel->HorizontalScrollbarBarColor = true;
 			this->ControlBarPanel->HorizontalScrollbarHighlightOnWheel = false;
 			this->ControlBarPanel->HorizontalScrollbarSize = 14;
-			this->ControlBarPanel->Location = System::Drawing::Point(1009, 406);
+			this->ControlBarPanel->Location = System::Drawing::Point(975, 406);
 			this->ControlBarPanel->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->ControlBarPanel->Name = L"ControlBarPanel";
 			this->ControlBarPanel->Padding = System::Windows::Forms::Padding(5, 7, 5, 7);
-			this->ControlBarPanel->Size = System::Drawing::Size(290, 283);
+			this->ControlBarPanel->Size = System::Drawing::Size(324, 283);
 			this->ControlBarPanel->TabIndex = 5;
 			this->ControlBarPanel->VerticalScrollbarBarColor = true;
 			this->ControlBarPanel->VerticalScrollbarHighlightOnWheel = false;
@@ -279,7 +339,7 @@ namespace RoLP {
 			this->StopProcessingButton->Location = System::Drawing::Point(66, 232);
 			this->StopProcessingButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->StopProcessingButton->Name = L"StopProcessingButton";
-			this->StopProcessingButton->Size = System::Drawing::Size(150, 40);
+			this->StopProcessingButton->Size = System::Drawing::Size(192, 40);
 			this->StopProcessingButton->TabIndex = 9;
 			this->StopProcessingButton->Text = L"Stop Processing";
 			this->StopProcessingButton->UseSelectable = true;
@@ -290,7 +350,7 @@ namespace RoLP {
 			this->ProcessingButton->Location = System::Drawing::Point(66, 184);
 			this->ProcessingButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->ProcessingButton->Name = L"ProcessingButton";
-			this->ProcessingButton->Size = System::Drawing::Size(150, 40);
+			this->ProcessingButton->Size = System::Drawing::Size(192, 40);
 			this->ProcessingButton->TabIndex = 8;
 			this->ProcessingButton->Text = L"Processing";
 			this->ProcessingButton->UseSelectable = true;
@@ -301,7 +361,7 @@ namespace RoLP {
 			this->LoadSourceButton->Location = System::Drawing::Point(66, 135);
 			this->LoadSourceButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->LoadSourceButton->Name = L"LoadSourceButton";
-			this->LoadSourceButton->Size = System::Drawing::Size(150, 40);
+			this->LoadSourceButton->Size = System::Drawing::Size(192, 40);
 			this->LoadSourceButton->TabIndex = 7;
 			this->LoadSourceButton->Text = L"Load Source";
 			this->LoadSourceButton->UseSelectable = true;
@@ -310,7 +370,7 @@ namespace RoLP {
 			// ImageRadioButton
 			// 
 			this->ImageRadioButton->AutoSize = true;
-			this->ImageRadioButton->Location = System::Drawing::Point(8, 45);
+			this->ImageRadioButton->Location = System::Drawing::Point(8, 35);
 			this->ImageRadioButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->ImageRadioButton->Name = L"ImageRadioButton";
 			this->ImageRadioButton->Size = System::Drawing::Size(60, 17);
@@ -321,7 +381,7 @@ namespace RoLP {
 			// VideoRadioButton
 			// 
 			this->VideoRadioButton->AutoSize = true;
-			this->VideoRadioButton->Location = System::Drawing::Point(8, 78);
+			this->VideoRadioButton->Location = System::Drawing::Point(8, 68);
 			this->VideoRadioButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->VideoRadioButton->Name = L"VideoRadioButton";
 			this->VideoRadioButton->Size = System::Drawing::Size(58, 17);
@@ -332,7 +392,7 @@ namespace RoLP {
 			// CameraRadioButton
 			// 
 			this->CameraRadioButton->AutoSize = true;
-			this->CameraRadioButton->Location = System::Drawing::Point(8, 110);
+			this->CameraRadioButton->Location = System::Drawing::Point(8, 100);
 			this->CameraRadioButton->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->CameraRadioButton->Name = L"CameraRadioButton";
 			this->CameraRadioButton->Size = System::Drawing::Size(69, 17);
@@ -359,7 +419,7 @@ namespace RoLP {
 			this->SrcViewPanel->Location = System::Drawing::Point(7, 12);
 			this->SrcViewPanel->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->SrcViewPanel->Name = L"SrcViewPanel";
-			this->SrcViewPanel->Size = System::Drawing::Size(985, 666);
+			this->SrcViewPanel->Size = System::Drawing::Size(962, 666);
 			this->SrcViewPanel->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->SrcViewPanel->TabIndex = 8;
 			this->SrcViewPanel->TabStop = false;
@@ -368,8 +428,6 @@ namespace RoLP {
 			// ResultPanel
 			// 
 			this->ResultPanel->AutoSize = true;
-			this->ResultPanel->Controls->Add(this->Status_label);
-			this->ResultPanel->Controls->Add(this->metroLabel1);
 			this->ResultPanel->Controls->Add(this->CharResultLabel);
 			this->ResultPanel->Controls->Add(this->PlateViewResultBox);
 			this->ResultPanel->Controls->Add(this->CharResultText);
@@ -378,38 +436,25 @@ namespace RoLP {
 			this->ResultPanel->HorizontalScrollbarBarColor = true;
 			this->ResultPanel->HorizontalScrollbarHighlightOnWheel = false;
 			this->ResultPanel->HorizontalScrollbarSize = 14;
-			this->ResultPanel->Location = System::Drawing::Point(1009, 12);
+			this->ResultPanel->Location = System::Drawing::Point(975, 12);
 			this->ResultPanel->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->ResultPanel->Name = L"ResultPanel";
 			this->ResultPanel->Padding = System::Windows::Forms::Padding(5, 7, 5, 7);
-			this->ResultPanel->Size = System::Drawing::Size(290, 386);
+			this->ResultPanel->Size = System::Drawing::Size(324, 386);
 			this->ResultPanel->TabIndex = 7;
 			this->ResultPanel->VerticalScrollbarBarColor = true;
 			this->ResultPanel->VerticalScrollbarHighlightOnWheel = false;
 			this->ResultPanel->VerticalScrollbarSize = 10;
 			// 
-			// Status_label
-			// 
-			this->Status_label->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->Status_label->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->Status_label->Font = (gcnew System::Drawing::Font(L"Myanmar Text", 17, System::Drawing::FontStyle::Bold));
-			this->Status_label->Location = System::Drawing::Point(24, 317);
-			this->Status_label->Margin = System::Windows::Forms::Padding(3);
-			this->Status_label->Name = L"Status_label";
-			this->Status_label->Size = System::Drawing::Size(244, 58);
-			this->Status_label->TabIndex = 16;
-			this->Status_label->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			this->Status_label->UseCompatibleTextRendering = true;
-			// 
 			// CharResultLabel
 			// 
 			this->CharResultLabel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->CharResultLabel->Font = (gcnew System::Drawing::Font(L"Myanmar Text", 24, System::Drawing::FontStyle::Bold));
-			this->CharResultLabel->Location = System::Drawing::Point(8, 194);
+			this->CharResultLabel->Location = System::Drawing::Point(8, 257);
 			this->CharResultLabel->Margin = System::Windows::Forms::Padding(3);
 			this->CharResultLabel->Name = L"CharResultLabel";
 			this->CharResultLabel->Padding = System::Windows::Forms::Padding(0, 18, 0, 0);
-			this->CharResultLabel->Size = System::Drawing::Size(274, 81);
+			this->CharResultLabel->Size = System::Drawing::Size(308, 81);
 			this->CharResultLabel->TabIndex = 14;
 			this->CharResultLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			this->CharResultLabel->UseCompatibleTextRendering = true;
@@ -419,7 +464,7 @@ namespace RoLP {
 			this->PlateViewResultBox->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->PlateViewResultBox->Location = System::Drawing::Point(8, 69);
 			this->PlateViewResultBox->Name = L"PlateViewResultBox";
-			this->PlateViewResultBox->Size = System::Drawing::Size(274, 81);
+			this->PlateViewResultBox->Size = System::Drawing::Size(308, 81);
 			this->PlateViewResultBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->PlateViewResultBox->TabIndex = 13;
 			this->PlateViewResultBox->TabStop = false;
@@ -428,7 +473,7 @@ namespace RoLP {
 			// CharResultText
 			// 
 			this->CharResultText->AutoSize = true;
-			this->CharResultText->Location = System::Drawing::Point(8, 172);
+			this->CharResultText->Location = System::Drawing::Point(8, 235);
 			this->CharResultText->Name = L"CharResultText";
 			this->CharResultText->Size = System::Drawing::Size(109, 19);
 			this->CharResultText->TabIndex = 12;
@@ -460,14 +505,36 @@ namespace RoLP {
 			this->timer1->Interval = 10;
 			this->timer1->Tick += gcnew System::EventHandler(this, &AppForm::timer1_Tick);
 			// 
-			// metroLabel1
+			// Contact_Panel
 			// 
-			this->metroLabel1->AutoSize = true;
-			this->metroLabel1->Location = System::Drawing::Point(8, 295);
-			this->metroLabel1->Name = L"metroLabel1";
-			this->metroLabel1->Size = System::Drawing::Size(43, 19);
-			this->metroLabel1->TabIndex = 15;
-			this->metroLabel1->Text = L"Status";
+			this->Contact_Panel->Controls->Add(this->Num_phone_label);
+			this->Contact_Panel->HorizontalScrollbarBarColor = true;
+			this->Contact_Panel->HorizontalScrollbarHighlightOnWheel = false;
+			this->Contact_Panel->HorizontalScrollbarSize = 10;
+			this->Contact_Panel->Location = System::Drawing::Point(226, 52);
+			this->Contact_Panel->Name = L"Contact_Panel";
+			this->Contact_Panel->Size = System::Drawing::Size(1309, 695);
+			this->Contact_Panel->TabIndex = 4;
+			this->Contact_Panel->VerticalScrollbarBarColor = true;
+			this->Contact_Panel->VerticalScrollbarHighlightOnWheel = false;
+			this->Contact_Panel->VerticalScrollbarSize = 10;
+			// 
+			// Num_phone_label
+			// 
+			this->Num_phone_label->AutoSize = true;
+			this->Num_phone_label->BackColor = System::Drawing::Color::Silver;
+			this->Num_phone_label->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->Num_phone_label->FontSize = MetroFramework::MetroLabelSize::Tall;
+			this->Num_phone_label->FontWeight = MetroFramework::MetroLabelWeight::Regular;
+			this->Num_phone_label->Location = System::Drawing::Point(495, 173);
+			this->Num_phone_label->Name = L"Num_phone_label";
+			this->Num_phone_label->Size = System::Drawing::Size(309, 225);
+			this->Num_phone_label->TabIndex = 2;
+			this->Num_phone_label->Text = L"\r\n\r\nBart³omiej Pyk\r\n\r\nphone: 732 011 300\r\ne-mail: pyk.bartlomiej@gmail.com  \r\n\r\n\r"
+				L"\n";
+			this->Num_phone_label->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->Num_phone_label->UseCustomBackColor = true;
+			this->Num_phone_label->UseCustomForeColor = true;
 			// 
 			// AppForm
 			// 
@@ -475,31 +542,44 @@ namespace RoLP {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BorderStyle = MetroFramework::Forms::MetroFormBorderStyle::FixedSingle;
 			this->ClientSize = System::Drawing::Size(1538, 755);
+			this->Controls->Add(this->Contact_Panel);
 			this->Controls->Add(this->Recognition_Panel);
+			this->Controls->Add(this->About_Panel);
 			this->Controls->Add(this->LeftMenu);
 			this->Font = (gcnew System::Drawing::Font(L"Myanmar Text", 7.471698F));
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Margin = System::Windows::Forms::Padding(3, 4, 3, 4);
 			this->MaximizeBox = false;
 			this->Name = L"AppForm";
 			this->Padding = System::Windows::Forms::Padding(0, 86, 0, 0);
 			this->Style = MetroFramework::MetroColorStyle::Red;
+			this->Text = L"RoLP";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &AppForm::AppForm_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &AppForm::AppForm_Load);
 			this->LeftMenu->ResumeLayout(false);
 			this->Recognition_Panel->ResumeLayout(false);
 			this->Recognition_Panel->PerformLayout();
+			this->About_Panel->ResumeLayout(false);
+			this->About_Panel->PerformLayout();
 			this->ControlBarPanel->ResumeLayout(false);
 			this->ControlBarPanel->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->SrcViewPanel))->EndInit();
 			this->ResultPanel->ResumeLayout(false);
 			this->ResultPanel->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->PlateViewResultBox))->EndInit();
+			this->Contact_Panel->ResumeLayout(false);
+			this->Contact_Panel->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
+
+
 #pragma endregion
 
 	private: System::Void AppForm_Load(System::Object^  sender, System::EventArgs^  e) {
+		Contact_Panel->Hide();
+		About_Panel->Hide();
+		Recognition_Panel->Show();
 	}
 	private: System::Void metroPanel1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 	}
@@ -524,6 +604,9 @@ namespace RoLP {
 
 		if (ImageRadioButton->Checked == true) {
 
+			timer1->Enabled = false;
+			delete CAP;
+			CAP = NULL;
 			OpenFileDialog^ Open = gcnew OpenFileDialog();
 			Open->ShowHelp = true;
 			Open->RestoreDirectory = true;
@@ -545,17 +628,16 @@ namespace RoLP {
 
 			Mat src = cv::imread(file_path, 1);
 			int tmp = 1;
-			//string tmp_name = "Test:";
 			cv::Mat img2;
 
 			dst.create(src.size(), src.type());
 
-			cvtColor(src, gray, cv::COLOR_BGR2GRAY); // zmiana na czarno bia³y obraz
-			CannyThreshold(0, gray);
+			cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 			equalizeHist(gray, img_to_det);
-			//cv::imshow("Morpholofy", img_to_det);
-			cv::CascadeClassifier cascadeSymbol; // Powo³anie Klasyfikatora Kaskadowego
-			bool cascadeSymbolLoad = cascadeSymbol.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml"); // Pobranie nauczonych danych 
+			CannyThreshold(0, gray);
+			//cv::imshow("Equalize Histogram",img_to_det);
+			cv::CascadeClassifier cascadeSymbol;
+			bool cascadeSymbolLoad = cascadeSymbol.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml");
 
 			tesseract::TessBaseAPI TesseractAPI;
 			if (TesseractAPI.Init(NULL, "eng", tesseract::OEM_DEFAULT) < 0) return;
@@ -612,12 +694,18 @@ namespace RoLP {
 			equalizeHist(gray, img_to_tess);
 			cv::Mat SubFrame = img_to_tess;
 
-			TesseractAPI.SetImage(SubFrame.data, SubFrame.cols, SubFrame.rows, 3, SubFrame.step);
-			char* Text_ret = _strdup(TesseractAPI.GetUTF8Text());
+			char* Text_ret = NULL;
+			int i = 0;
+
+			while (!Text_ret || i == 5) {
+				TesseractAPI.SetImage(SubFrame.data, SubFrame.cols, SubFrame.rows, 3, SubFrame.step);
+				Text_ret = _strdup(TesseractAPI.GetUTF8Text());
+				i++;
+			}
+
 			System::String^ result = msclr::interop::marshal_as<System::String^>(Text_ret);
 			CharResultLabel->Text = result;
-			if (CharResultLabel->Text) Status_label->Text = "Success";
-			else Status_label->Text = "Failed";
+
 		}
 
 		if (VideoRadioButton->Checked == true)
@@ -629,9 +717,8 @@ namespace RoLP {
 
 			if (Open->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 			{
-				file_path = msclr::interop::marshal_as<std::string>(Open->FileName);
-				//static VideoCapture cap(S);
-				//CAP = &cap;
+				string file_path = msclr::interop::marshal_as<std::string>(Open->FileName);
+
 				if (CAP) { delete CAP; CAP = NULL; }
 				CAP = new VideoCapture(file_path);
 				StatusMainLabel->Text = "The source has been successfully loaded";
@@ -645,8 +732,13 @@ namespace RoLP {
 		}
 
 		if (CameraRadioButton->Checked == true) {
-			if (CAP) { delete CAP; CAP = NULL; }
-			if (CAP = new VideoCapture(0)) StatusMainLabel->Text = "The source has been successfully loaded";
+			if (CAP)
+			{
+				delete CAP;
+				CAP = NULL;
+			}
+			CAP = new VideoCapture(0);
+			if (CAP) StatusMainLabel->Text = "The source has been successfully loaded";
 			else
 			{
 				StatusMainLabel->Text = "The source has not been successfully loaded";
@@ -663,6 +755,10 @@ namespace RoLP {
 			MessageBoxButtons::YesNo,
 			MessageBoxIcon::Stop) == System::Windows::Forms::DialogResult::Yes) {
 			exitValue = true;
+			timer1->Enabled = false;
+			delete CAP;
+			CAP = NULL;
+			cv::destroyWindow("Video stream");
 			exit(0);
 		}
 		else {
@@ -670,15 +766,13 @@ namespace RoLP {
 		}
 	}
 	private: System::Void ProcessingButton_Click(System::Object^  sender, System::EventArgs^  e) {
+		SrcViewPanel->Refresh();
 		timer1->Enabled = true;
 	}
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 		Mat Frame;
 		// Capture frame-by-frame
 		*CAP >> Frame;
-		//CAP >> frame;
-		cv::VideoCapture Capture(file_path);
-		if (!Capture.isOpened()) return;
 
 		cv::CascadeClassifier Classifier;
 		if (!Classifier.load("D:/Studia/IV_rok/Praca_inz/Projekt/RoLP/x64/Debug/eu.xml")) return;
@@ -709,34 +803,66 @@ namespace RoLP {
 		}
 
 		std::vector<cv::Rect> Regions;
+
+		//cvtColor(Frame, gray, cv::COLOR_BGR2GRAY);
+		//CannyThreshold(0, gray);
+		//equalizeHist(gray, img_to_det);
+
+		Frame = img_to_det;
 		Classifier.detectMultiScale(Frame, Regions, 1.1, 2, 0, cv::Size(50, 50));
 
 		for (int i = 0; i < Regions.size(); ++i) {
 			cv::Mat SubFrame = Frame(Regions[i]);
-			// Show cut frame
+			cv::Mat img_to_tess;
 			//cv::imshow("SubFrame", SubFrame);
-
 			TesseractAPI.SetImage(SubFrame.data, SubFrame.cols, SubFrame.rows, 3, SubFrame.step);
-			//TesseractAPI.TesseractRect(Frame.data, 1, Frame.step1(), Regions[i].x, Regions[i].y, Regions[i].width, Regions[i].height);
 			if (!TesseractAPI.Recognize(0)) {
 				const char* Text_result = _strdup(TesseractAPI.GetUTF8Text());
-				//cv::imshow(Text, SubFrame);
+				//cv::imshow(Text_result, SubFrame);
 				System::IntPtr plate_frame(SubFrame.ptr());
 				PlateViewResultBox->Width = (int)(SubFrame.cols);
 				PlateViewResultBox->Height = (int)(SubFrame.rows);
-				PlateViewResultBox->BackgroundImage = gcnew System::Drawing::Bitmap(SubFrame.cols, SubFrame.rows, SubFrame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, plate_frame);
+				PlateViewResultBox->BackgroundImage = gcnew System::Drawing::Bitmap
+				(SubFrame.cols, SubFrame.rows, SubFrame.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, plate_frame);
 				PlateViewResultBox->Refresh();
 
 				System::String^ result = msclr::interop::marshal_as<System::String^>(Text_result);
 				CharResultLabel->Text = result;
+
 			}
 
 		}
 	}
 	private: System::Void StopProcessingButton_Click(System::Object^  sender, System::EventArgs^  e) {
 		timer1->Enabled = false;
-		cv::destroyWindow("Video stream");
+		delete CAP;
 		CAP = NULL;
+		StatusMainLabel->Text = " ";
+		return;
+	}
+	private: System::Void About_Button_Click(System::Object^  sender, System::EventArgs^  e) {
+		timer1->Enabled = false;
+		delete CAP;
+		CAP = NULL;
+		Recognition_Panel->Hide();
+		Contact_Panel->Hide();
+		About_Panel->Show();
+	}
+	private: System::Void Contact_Button_Click(System::Object^  sender, System::EventArgs^  e) {
+		timer1->Enabled = false;
+		delete CAP;
+		CAP = NULL;
+		Recognition_Panel->Hide();
+		About_Panel->Hide();
+		Contact_Panel->Show();
+	}
+	private: System::Void Recognition_Button_Click(System::Object^  sender, System::EventArgs^  e) {
+		timer1->Enabled = false;
+		delete CAP;
+		CAP = NULL;
+		Contact_Panel->Hide();
+		About_Panel->Hide();
+		Recognition_Panel->Show();
 	}
 	};
 }
